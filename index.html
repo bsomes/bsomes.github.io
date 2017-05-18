@@ -115,7 +115,7 @@
 
   function checkImage(button) {
     var image = button.parentElement.parentElement.id
-    var url = 'http://xrayserver.herokuapp.com/model/predict/?image=' + image + ".jpg"
+    var url = 'https://xrayserver.herokuapp.com/model/predict/?image=' + image + ".jpg"
 
     xmlHttp = new XMLHttpRequest()
     xmlHttp.onreadystatechange = function() {
