@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Xray scanner</title>
+</head>
+
+<style>
+  .section-right {
+    float: right;
+    font-size: 2em;
+  }
+  button {
+    padding: 12px;
+    margin: 10px;
+
+  }
+
+  img {
+    width: 50%;
+    max-height: 500px;
+  }
+</style>
+
+<body>
+  <div id="test" class="image">
+    <img src="test.jpg" alt="multicolored xray">
+    <div class="section-right"></div>
+    <div style="margin-left: 15%">
+      <button onclick="checkImage(this)">Check Image!</button>
+    </div>
+  </div>
+  <div id="B0082_0178" class="image">
+    <img src="B0082_0178.jpg" alt="regular xray">
+    <div class="section-right"></div>
+    <div style="margin-left: 15%">
+      <button onclick="checkImage(this)">Check Image!</button>
+    </div>
+  </div>
+  <div id="B0082_0133" class="image">
+    <img src="B0082_0133.jpg" alt="regular xray">
+    <div class="section-right"></div>
+    <div style="margin-left: 15%">
+      <button onclick="checkImage(this)">Check Image!</button>
+    </div>
+  </div>
+  <div id="B0082_0122" class="image">
+    <img src="B0082_0122.jpg" alt="regular xray">
+    <div class="section-right"></div>
+    <div style="margin-left: 15%">
+      <button onclick="checkImage(this)">Check Image!</button>
+    </div>
+  </div>
+  <div id="B0080_0094" class="image">
+    <img src="B0080_0094.jpg" alt="regular xray">
+    <div class="section-right"></div>
+    <div style="margin-left: 15%">
+      <button onclick="checkImage(this)">Check Image!</button>
+    </div>
+  </div>
+  <div id="B0080_0086" class="image">
+    <img src="B0080_0086.jpg" alt="regular xray">
+    <div class="section-right"></div>
+    <div style="margin-left: 15%">
+      <button onclick="checkImage(this)">Check Image!</button>
+    </div>
+  </div>
+  <div id="B0080_0051" class="image">
+    <img src="B0080_0051.jpg" alt="regular xray">
+    <div class="section-right"></div>
+    <div style="margin-left: 15%">
+      <button onclick="checkImage(this)">Check Image!</button>
+    </div>
+  </div>
+  <div id="B0080_0024" class="image">
+    <img src="B0080_0024.jpg" alt="regular xray">
+    <div class="section-right"></div>
+    <div style="margin-left: 15%">
+      <button onclick="checkImage(this)">Check Image!</button>
+    </div>
+  </div>
+  <div id="B0046_0015" class="image">
+    <img src="B0046_0015.jpg" alt="regular xray">
+    <div class="section-right"></div>
+    <div style="margin-left: 15%">
+      <button onclick="checkImage(this)">Check Image!</button>
+    </div>
+  </div>
+  <div id="B0046_0012" class="image">
+    <img src="B0046_0012.jpg" alt="regular xray">
+    <div class="section-right"></div>
+    <div style="margin-left: 15%">
+      <button onclick="checkImage(this)">Check Image!</button>
+    </div>
+  </div>
+  <div id="B0046_0011" class="image">
+    <img src="B0046_0011.jpg" alt="regular xray">
+    <div class="section-right"></div>
+    <div style="margin-left: 15%">
+      <button onclick="checkImage(this)">Check Image!</button>
+    </div>
+  </div>
+  <div id="B0046_0007" class="image">
+    <img src="B0046_0007.jpg" alt="regular xray">
+    <div class="section-right"></div>
+    <div style="margin-left: 15%">
+      <button onclick="checkImage(this)">Check Image!</button>
+    </div>
+  </div>
+</body>
+
+<script>
+  var xmlHttp = null
+
+  function checkImage(button) {
+    var image = button.parentElement.parentElement.id
+    var url = 'http://xrayserver.herokuapp.com/model/predict/?image=' + image + ".jpg"
+
+    xmlHttp = new XMLHttpRequest()
+    xmlHttp.onreadystatechange = function() {
+      if (this.readyState == 4) {
+        var response = JSON.parse(this.responseText);
+        processRequest(response, image);
+      }
+    };
+    xmlHttp.open("GET", url, true);
+    xmlHttp.send(null);
+  }
+
+  function processRequest(response, image) {
+    var labels = document.getElementsByClassName('section-right')
+    for (var i = 0; i < labels.length; i++) {
+      if (labels[i].parentNode.id == image) {
+        var gun = response.prediction.reduce((a,b) => a.hasOwnProperty('gun') ? a : b).gun
+        var razor = response.prediction.reduce((a,b) => a.hasOwnProperty('razor') ? a : b).razor
+        var shuriken = response.prediction.reduce((a,b) => a.hasOwnProperty('shuriken') ? a : b).shuriken
+        var ok = response.prediction.reduce((a,b) => a.hasOwnProperty('ok') ? a : b).ok
+        labels[i].innerHTML = `<div>Gun: ${gun}</div> <div>Razor: ${razor}</div> <div>Shuriken: ${shuriken}</div> <div>Ok: ${ok}</div>`
+      } else {
+        labels[i].innerHTML = ""
+      }
+    }
+  }
+</script>
+
+</html>
